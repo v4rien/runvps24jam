@@ -1,0 +1,27 @@
+# Run:
+# - systemctl enable c9
+# - systemctl {start,stop,restart} c9
+#
+[Unit]
+Description=c9
+After=syslog.target network.target
+ 
+[Service]
+Type=simple
+ExecStart=/usr/bin/node /home/c9user/c9/server.js -a username:password -w /home/c9user/my-projects
+Environment=NODE_ENV=production PORT=8080
+User=c9user
+Group=c9user
+UMask=0002
+Restart=on-failure
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=c9
+ 
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl enable c9.service
+sudo systemctl daemon-reload
+sudo service c9 start
